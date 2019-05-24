@@ -7,8 +7,20 @@ from datetime import datetime
 
 class SubmissionInformationPackage:
 
-    def __init__(self, colID, accession=None):
+    def __init__(self):
+        pass
+        
+    def load(self, path):
+        if not os.path.isdir():
+            raise Exception("ERROR: " + str(path) + " is not a valid SIP. You may want to create a SIP with .create().")
 
+        self.bag = bagit.Bag(path)
+        self.bagID = os.path.basename(path)
+        self.colID = self.bagID.split("_")[0]
+        self.data = os.path.join(path, "data")
+        
+    
+    def create(self, colID):
         sipPath= "/media/Masters/Archives/SIP"
         
         metadata = {\
@@ -25,7 +37,7 @@ class SubmissionInformationPackage:
         if not os.path.isdir(os.path.join(sipPath, colID)):
             os.mkdir(os.path.join(sipPath, colID))
             
-        self.bagDir = os.path.join(sipPath, colID, self.bagID )
+        self.bagDir = os.path.join(sipPath, colID, self.bagID)
         os.mkdir(self.bagDir)
 
         self.bag = bagit.make_bag(self.bagDir, metadata)
@@ -45,14 +57,14 @@ class SubmissionInformationPackage:
                 if os.path.isfile(thingPath):
                     shutil.copy2(thingPath, self.data)
                     shutil.copy2(thingPath, self.procMasters)
-                    #os.remove(thingPath)
+                    os.remove(thingPath)
                 else:
                     shutil.copytree(thingPath, os.path.join(self.data, thing))
                     shutil.copytree(thingPath, os.path.join(self.procMasters, thing))
-                    #shutil.rmtree(thingPath)
+                    shutil.rmtree(thingPath)
             if len(os.listdir(dir)) == 0:
-                #os.rmdir(dir)
-                pass
+                os.rmdir(dir)
+                
                 
     def inventory(self):
         inventory = []
@@ -69,18 +81,29 @@ class SubmissionInformationPackage:
                 inventory.append(os.path.sep.join(relPath))
         return "\n".join(inventory)
         
+    def log(self):
+        lines = []
+        manifest = os.path.join(self.bagDir, "manifest-sha256.txt")
+        with open(manifest, "r") as f:
+            for line in f.readlines():
+                lines.append(line)
+            f.close()
+        return lines
+        
     def size(self):
         suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
         dirSize = 0
+        fileCount = 0
         for root, dirs, files in os.walk(self.data):
             for file in files:
+                fileCount += 1
                 dirSize += os.path.getsize(os.path.join(root, file))
         i = 0
         while dirSize >= 1024 and i < len(suffixes)-1:
             dirSize /= 1024.
             i += 1
         f = ('%.2f' % dirSize).rstrip('0').rstrip('.')
-        return [f, suffixes[i]]
+        return [f, suffixes[i], fileCount]
                     
     def setupProcecssing(self):
         
