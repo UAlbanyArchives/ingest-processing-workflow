@@ -11,7 +11,7 @@ class SubmissionInformationPackage:
         pass
         
     def load(self, path):
-        if not os.path.isdir():
+        if not os.path.isdir(path):
             raise Exception("ERROR: " + str(path) + " is not a valid SIP. You may want to create a SIP with .create().")
 
         self.bag = bagit.Bag(path)
@@ -81,7 +81,7 @@ class SubmissionInformationPackage:
                 inventory.append(os.path.sep.join(relPath))
         return "\n".join(inventory)
         
-    def log(self):
+    def manifest(self):
         lines = []
         manifest = os.path.join(self.bagDir, "manifest-sha256.txt")
         with open(manifest, "r") as f:

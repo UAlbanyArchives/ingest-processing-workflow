@@ -101,24 +101,67 @@ else:
     newAccession["id_0"] = year
     newAccession["id_1"] = str(newID)
     accessionID = year + "-" + str(newID)
-    print (newAccession)
     updateAccession = client.post("repositories/2/accessions", json=newAccession)
     if updateAccession.status_code == 200:
         print ("\tSuccessfully updated accession " + newAccession["id_0"] + "-" + newAccession["id_1"])
     else:
         print ("\tERROR " + str(updateAccession.status_code) + "! Failed to update accession: " + newAccession["id_0"] + "-" + newAccession["id_1"])
         
+print ("Waiting for new accession to be indexed...")
+time.sleep(120)
     
 print ("Ingesting records at " + path)
+arrangementSwitch = False
+arrangementsPath = "/media/Masters/Archives/arrangements"
+arrangements = os.path.join(arrangementsPath, args.ID.upper())
+if os.path.isdir(arrangements):
+    arrangementSwitch = True
 
 SIP = ingest.main(args.ID, path, accessionID)
-manifest = SIP.log()
+
+print ("Updating log files...")
+newFiles = {}
+fileInventory = SIP.inventory()
+for newFile in fileInventory.split("\n"):
+    root, filePath = newFile.split(os.path.sep, 1)
+    fullPath = os.path.join(SIP.data, newFile)
+    modifiedTime = datetime.fromtimestamp(os.path.getmtime(fullPath))
+    if arrangementSwitch == True:
+        newFiles[root] = [os.path.dirname(filePath), os.path.basename(filePath), modifiedTime]
+    else:
+        newFiles[root] = [os.path.dirname(newFile), os.path.basename(filePath), modifiedTime]
+        
+logPath = os.path.join(os.path.dirname(path), "log")
+if not os.path.isdir(logPath):
+    os.mkdir(logPath)
+for logGroup in newFiles.keys():
+    if arrangementSwitch == True:
+        logFile = os.path.join(logPath, logGroup + ".xlsx")
+    else:
+        logFile = os.path.join(logPath, "transferLog.xlsx")
+    if os.path.isfile(logFile):
+        logBook = openpyxl.load_workbook(filename=accessionProfile, read_only=False)
+        sheet = logBook.active
+        startRow = int(sheet.max_row) + 1
+    else:
+        logBook = openpyxl.Workbook()
+        sheet = logBook.create_sheet(title="Sheet")
+        sheet["A1"] = "File Path"
+        sheet["B1"] = "File name"
+        sheet["C1"] = "Modified Date"
+        startRow = 2
+    for addedFile in newFiles["logGroup"]:
+        sheet["A" + str(startRow)] = addedFile[0]
+        sheet["B" + str(startRow)] = addedFile[1]
+        sheet["C" + str(startRow)] = addedFile[2]
+        startRow += 1
+        
+    logBook.save(filename=logFile)
+    print ("\tUpdated " + os.path.basename(logFile))
 
 
 # set up transfer directory again
 os.mkdir(path)
-arrangementsPath = "/media/Masters/Archives/arrangements"
-arrangements = os.path.join(arrangementsPath, args.ID.upper())
 if os.path.isdir(arrangements):
     for folder in os.listdir(arrangements):
         shutil.copytree(os.path.join(arrangements, folder), os.path.join(path, folder))
