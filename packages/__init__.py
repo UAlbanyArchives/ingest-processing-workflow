@@ -50,10 +50,8 @@ class SubmissionInformationPackage:
         if not os.path.isdir(dir):
             raise Exception("ERROR: " + str(dir) + " is not a valid path.")
         else:
-                
             for thing in os.listdir(dir):
                 thingPath = os.path.join(dir, thing)
-                print ("\tMoving " + thing)
                 if os.path.isfile(thingPath):
                     shutil.copy2(thingPath, self.data)
                     shutil.copy2(thingPath, self.procMasters)

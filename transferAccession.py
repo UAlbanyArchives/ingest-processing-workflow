@@ -98,6 +98,7 @@ else:
         newID = "00" + str(newID)
     elif len(str(newID)) == 2:
         newID = "0" + str(newID)
+    print ("Creating new accession " + year + "-" + str(newID) + "...")
     newAccession["id_0"] = year
     newAccession["id_1"] = str(newID)
     accessionID = year + "-" + str(newID)
@@ -123,38 +124,45 @@ print ("Updating log files...")
 newFiles = {}
 fileInventory = SIP.inventory()
 for newFile in fileInventory.split("\n"):
-    root, filePath = newFile.split(os.path.sep, 1)
-    fullPath = os.path.join(SIP.data, newFile)
-    modifiedTime = datetime.fromtimestamp(os.path.getmtime(fullPath))
-    if arrangementSwitch == True:
-        newFiles[root] = [os.path.dirname(filePath), os.path.basename(filePath), modifiedTime]
+    if os.path.sep in newFile:
+        root, filePath = newFile.split(os.path.sep, 1)
     else:
-        newFiles[root] = [os.path.dirname(newFile), os.path.basename(filePath), modifiedTime]
-        
+        root = "transferLog"
+        filePath = newFile
+    fullPath = os.path.join(SIP.data, newFile)
+    modifiedTime = str(datetime.fromtimestamp(os.path.getmtime(fullPath)))
+    if not root in newFiles.keys():
+        newFiles[root] = []
+    if arrangementSwitch == True:
+        newFiles[root].append([os.path.dirname(filePath), os.path.basename(filePath), modifiedTime])
+    else:
+        newFiles[root].append([os.path.dirname(newFile), os.path.basename(filePath), modifiedTime])
+
 logPath = os.path.join(os.path.dirname(path), "log")
 if not os.path.isdir(logPath):
     os.mkdir(logPath)
 for logGroup in newFiles.keys():
-    if arrangementSwitch == True:
-        logFile = os.path.join(logPath, logGroup + ".xlsx")
-    else:
-        logFile = os.path.join(logPath, "transferLog.xlsx")
+    excapedLogGroup = "".join([c for c in logGroup if c.isalpha() or c.isdigit() or c==' ']).rstrip()
+    logFile = os.path.join(logPath, excapedLogGroup + ".xlsx")
     if os.path.isfile(logFile):
-        logBook = openpyxl.load_workbook(filename=accessionProfile, read_only=False)
+        logBook = openpyxl.load_workbook(filename=logFile, read_only=False)
         sheet = logBook.active
         startRow = int(sheet.max_row) + 1
     else:
         logBook = openpyxl.Workbook()
-        sheet = logBook.create_sheet(title="Sheet")
+        sheet = logBook.active
         sheet["A1"] = "File Path"
         sheet["B1"] = "File name"
         sheet["C1"] = "Modified Date"
         startRow = 2
-    for addedFile in newFiles["logGroup"]:
-        sheet["A" + str(startRow)] = addedFile[0]
-        sheet["B" + str(startRow)] = addedFile[1]
-        sheet["C" + str(startRow)] = addedFile[2]
-        startRow += 1
+    for addedFile in newFiles[logGroup]:
+        try:
+            sheet["A" + str(startRow)] = addedFile[0]
+            sheet["B" + str(startRow)] = addedFile[1]
+            sheet["C" + str(startRow)] = addedFile[2]
+            startRow += 1
+        except:
+            logBook.save(filename=logFile)
         
     logBook.save(filename=logFile)
     print ("\tUpdated " + os.path.basename(logFile))
