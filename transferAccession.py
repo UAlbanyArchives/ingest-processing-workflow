@@ -108,8 +108,8 @@ else:
     else:
         print ("\tERROR " + str(updateAccession.status_code) + "! Failed to update accession: " + newAccession["id_0"] + "-" + newAccession["id_1"])
         
-print ("Waiting for new accession to be indexed...")
-time.sleep(120)
+    print ("Waiting for new accession to be indexed...")
+    time.sleep(120)
     
 print ("Ingesting records at " + path)
 arrangementSwitch = False
