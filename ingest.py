@@ -2,7 +2,7 @@ import os
 import sys
 import json
 import bagit
-from packages import SubmissionInformationPackage
+from packages.SIP import SubmissionInformationPackage
 
 #version of ingest.py
 version = "0.1"
