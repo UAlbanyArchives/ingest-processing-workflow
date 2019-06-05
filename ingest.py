@@ -84,7 +84,9 @@ def main(ID, path=None, accession=None):
                     accessionObject["disposition"] = accessionObject["disposition"] + "\n" + str(SIP.bagID)
                 else:
                     accessionObject["disposition"] = str(SIP.bagID)
-                    
+                
+                # File inventory did not prove useful with large transfers
+                """
                 fileInventory = SIP.inventory()
                 if len(fileInventory) > 62000:
                     fileInventory = fileInventory[0:62000] + "\nAdditional files exempted due to character limits."
@@ -92,6 +94,7 @@ def main(ID, path=None, accession=None):
                     accessionObject["inventory"] = accessionObject["inventory"] + "\n" + fileInventory
                 else:
                     accessionObject["inventory"] = fileInventory
+                """
                 
                 totalSize = SIP.size()
                 extent = {"jsonmodel_type":"extent", "portion":"whole","number":str(totalSize[0]),"extent_type":str(totalSize[1])}
