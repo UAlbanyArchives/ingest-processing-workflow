@@ -29,6 +29,9 @@ def main(ID, path=None, accession=None):
         SIP.create(ID)
         SIP.package(path)
         print ("SIP " + SIP.bagID + " created.")
+        
+        SIP.extentLog("/media/SPE/DigitizationExtentTracker/DigitizationExtentTracker.xlsx")
+        print ("Logged ingest to DigitizationExtentTracker.")
 
     else:
         print ("Reading accession " + accession)
