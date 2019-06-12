@@ -129,7 +129,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("ID", help="Collection ID for the files you are packaging.")
     parser.add_argument("-p", "--path", help="Path of files to ingest. Folder will be removed afterwords.", default=None)
-    parser.add_argument("-a", "--accession", help="Optional ArchivesSpace Accession ID for new acquisisions.", default=None)
+    parser.add_argument("-a", "--accession", help="Optional ArchivesSpace Accession ID for new acquisitions.", default=None)
     args = parser.parse_args()
     
     main(args.ID, args.path, args.accession)

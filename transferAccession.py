@@ -12,7 +12,7 @@ from asnake.client import ASnakeClient
 parser = argparse.ArgumentParser()
 parser.add_argument("ID", help="Collection ID for the files you are packaging.")
 parser.add_argument("-p", "--path", help="Path of files to ingest.", default=None)
-parser.add_argument("-a", "--accession", help="Optional ArchivesSpace Accession ID for new acquisisions.", default=None)
+parser.add_argument("-a", "--accession", help="Optional ArchivesSpace Accession ID for new acquisitions.", default=None)
 args = parser.parse_args()
 
 print (str(datetime.now()) + " Transferring records for " + str(args.ID))
