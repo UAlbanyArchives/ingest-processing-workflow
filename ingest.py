@@ -29,9 +29,6 @@ def main(ID, path=None, accession=None):
         SIP.create(ID)
         SIP.package(path)
         print ("SIP " + SIP.bagID + " created.")
-        
-        SIP.extentLog("/media/SPE/DigitizationExtentTracker/DigitizationExtentTracker.xlsx")
-        print ("Logged ingest to DigitizationExtentTracker.")
 
     else:
         print ("Reading accession " + accession)
@@ -87,7 +84,10 @@ def main(ID, path=None, accession=None):
     SIP.bag.save(manifests=True)
     print ("SIP Saved!")
     
-    if not accession == None:
+    if accession == None:
+        SIP.extentLog("/media/SPE/DigitizationExtentTracker/DigitizationExtentTracker.xlsx")
+        print ("Logged ingest to DigitizationExtentTracker.")
+    else:
         print ("Updating accession " + accessionID)
         if "disposition" in accessionObject.keys():
             accessionObject["disposition"] = accessionObject["disposition"] + "\n" + str(SIP.bagID)
