@@ -7,6 +7,7 @@ from packages.SIP import SubmissionInformationPackage
 argParse = argparse.ArgumentParser()
 argParse.add_argument("package", help="Package ID in Processing directory.")
 argParse.add_argument('-u', "--update", help="Package master files from the processing package instead of the files in the SIP.", action='store_true', default=None)
+argParse.add_argument('-n', "--noderivatives", help="Will not package derivatives. For cases were masters, (like PDFs) are the same as derivatives.", action='store_true', default=None)
 args = argParse.parse_args()
 
 if os.name == 'nt':
@@ -41,8 +42,9 @@ print ("Moving metadata...")
 AIP.packageMetadata(metadata)
 AIP.addSIPData(SIP.bag.path)
 
-print ("Moving derivatives...")
-AIP.packageFiles("derivatives", derivatives)
+if not args.noderivatives:
+    print ("Moving derivatives...")
+    AIP.packageFiles("derivatives", derivatives)
 
 if args.update:
     print ("Moving masters from processing...")
