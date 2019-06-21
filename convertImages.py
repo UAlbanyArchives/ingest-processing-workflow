@@ -7,11 +7,11 @@ from subprocess import Popen, PIPE
 if os.name == 'nt':
     processingDir = "\\\\Romeo\\SPE\\processing"
     imagemagick = "magick"
-    pdfunite = "???"
+    pdfCmd = ["pdftk", "cat output "]
 else:
     processingDir = "/media/SPE/processing"
     imagemagick = "convert"
-    pdfunite = "pdfunite"
+    pdfCmd = ["pdfunite", ""]
     
 parser = argparse.ArgumentParser()
 parser.add_argument("package", help="ID for package you are processing, i.e. 'ua950.012_Xf5xzeim7n4yE6tjKKHqLM'.")
@@ -92,7 +92,9 @@ if args.output.lower() == "pdf":
             for inputFile in os.listdir(folder):
                 if inputFile.lower().endswith(format1):
                     pageList.append("\'" + os.path.join(folder, inputFile) + "\'")
-            cmd = [pdfunite, " ".join(pageList), "\'" + outputPath + "\'"]
+            cmd = [pdfCmd[0], " ".join(pageList), pdfCmd[1] + "\'" + outputPath + "\'"]
+            #print (" ".join(cmd))
+            #print ("\n\n")
             process(" ".join(cmd))
         else:
             convertDir = os.path.join(package, "converting")
