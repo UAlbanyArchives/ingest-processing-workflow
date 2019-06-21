@@ -7,9 +7,11 @@ from subprocess import Popen, PIPE
 if os.name == 'nt':
     processingDir = "\\\\Romeo\\SPE\\processing"
     imagemagick = "magick"
+    pdfunite = "???"
 else:
     processingDir = "/media/SPE/processing"
     imagemagick = "convert"
+    pdfunite = "pdfunite"
     
 parser = argparse.ArgumentParser()
 parser.add_argument("package", help="ID for package you are processing, i.e. 'ua950.012_Xf5xzeim7n4yE6tjKKHqLM'.")
@@ -32,7 +34,7 @@ metadata = os.path.join(package, "metadata")
 dirList = [package, masters, derivatives, metadata]
 
 def process(cmd):
-    p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+    p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
     stdout, stderr = p.communicate()
     if len(stdout) > 0:
         print (stdout)
@@ -78,34 +80,40 @@ if args.output.lower() == "pdf":
             if item == "masters":
                 switch = True
         if len(rootDir) > 0:
-            relPath = os.path.join(derivatives, os.path.sep.join(folder))
+            relPath = os.path.join(derivatives, os.path.sep.join(rootDir))
             if not os.path.isdir(relPath):
                 os.makedirs(relPath)
         else:
             relPath = derivatives
         
-        convertDir = os.path.join(package, "converting")
-        if not os.path.isdir(convertDir):
-            os.mkdir(convertDir)
         pageList = []
-        for inputFile in os.listdir(folder):
-            if inputFile.lower().endswith(format1) or inputFile.lower().endswith(format2):
-                convertFile = os.path.join(convertDir, os.path.splitext(inputFile)[0] + ".jpg")
-                print ("compressing " + inputFile + "...")
-                cmd = [imagemagick, os.path.join(folder, inputFile), convertFile]
-                process(cmd)
-                pageList.append(convertFile)
-            
         outputPath = os.path.join(relPath, newFilename + ".pdf")
-        if os.path.isfile(outputPath):
-            print ("skipping, as " + newFilename + ".pdf already exists.")
+        if args.input.lower() == "pdf":
+            for inputFile in os.listdir(folder):
+                if inputFile.lower().endswith(format1):
+                    pageList.append("\'" + os.path.join(folder, inputFile) + "\'")
+            cmd = [pdfunite, " ".join(pageList), "\'" + outputPath + "\'"]
+            process(" ".join(cmd))
         else:
-            print ("converting " + newFilename + " to " + outputPath)
-            #print(pageList)
-            f = open(outputPath, "wb")
-            f.write(img2pdf.convert(pageList))
-            f.close()
-        shutil.rmtree(convertDir)
+            convertDir = os.path.join(package, "converting")
+            if not os.path.isdir(convertDir):
+                os.mkdir(convertDir)
+            for inputFile in os.listdir(folder):
+                if inputFile.lower().endswith(format1) or inputFile.lower().endswith(format2):
+                    convertFile = os.path.join(convertDir, os.path.splitext(inputFile)[0] + ".jpg")
+                    print ("compressing " + inputFile + "...")
+                    cmd = [imagemagick, os.path.join(folder, inputFile), convertFile]
+                    process(cmd)
+                    pageList.append(convertFile)
+            if os.path.isfile(outputPath):
+                print ("skipping, as " + newFilename + ".pdf already exists.")
+            else:
+                print ("converting " + newFilename + " to " + outputPath)
+                #print(pageList)
+                f = open(outputPath, "wb")
+                f.write(img2pdf.convert(pageList))
+                f.close()
+            shutil.rmtree(convertDir)
             
         
 else:
