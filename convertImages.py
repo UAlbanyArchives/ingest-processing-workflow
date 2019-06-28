@@ -34,8 +34,8 @@ metadata = os.path.join(package, "metadata")
 dirList = [package, masters, derivatives, metadata]
 
 def process(cmd):
-    #p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
-    p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+    p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
+    #p = Popen(cmd, stdout=PIPE, stderr=PIPE)
     stdout, stderr = p.communicate()
     if len(stdout) > 0:
         print (stdout)
