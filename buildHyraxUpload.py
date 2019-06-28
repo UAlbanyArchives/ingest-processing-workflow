@@ -116,11 +116,12 @@ for sheetFile in os.listdir(metadata):
                                             tree = client.get(resource["tree"]["ref"]).json()
                                         else:
                                             ref = client.get("repositories/2/find_by_id/archival_objects?ref_id[]=" + refID).json()
-                                            objURI = ref["archival_objects"][0]["ref"]
-                                            parentList = []
-                                            parentList = getParents(tree, parentList, 0)
-                                            print (parentList)
-                                            parents = "|".join(parentList)                                            
+                                            
+                                        objURI = ref["archival_objects"][0]["ref"]
+                                        parentList = []
+                                        parentList = getParents(tree, parentList, 0)
+                                        print (parentList)
+                                        parents = "|".join(parentList)                                            
                                         
                                     hyraxObject = ["DAO", "", row[22].value, args.package, collectingArea, colID, collection, refID, parents, title, "", date, \
                                     "", "", "", "", "whole", processingNote, "", ""]
