@@ -43,7 +43,7 @@ processingNote = "Processing documentation available at: https://wiki.albany.edu
 hyraxSheet = []
 
 #function to read ASpace tree to get parent ref_ids
-def getParents(obj, parentList, level):
+def getParents(obj, parentList, level, objURI):
     level += 1
     for child in obj["children"]:
         if level == 1:
@@ -53,7 +53,7 @@ def getParents(obj, parentList, level):
         else:
             parentRefID = client.get(child["record_uri"]).json()["ref_id"]
             parentList.append(parentRefID)
-            getParents(child, parentList, level)
+            getParents(child, parentList, level, objURI)
     
 for sheetFile in os.listdir(metadata):
     if sheetFile.lower().endswith(".xlsx"):
@@ -119,7 +119,7 @@ for sheetFile in os.listdir(metadata):
                                             
                                         objURI = ref["archival_objects"][0]["ref"]
                                         parentList = []
-                                        parentList = getParents(tree, parentList, 0)
+                                        parentList = getParents(tree, parentList, 0, objURI)
                                         print (parentList)
                                         parents = "|".join(parentList)                                            
                                         
