@@ -65,8 +65,13 @@ if len(os.listdir(collectionDir)) == 0:
     os.rmdir(collectionDir)
 
 if not args.update:
-    print ("Safely removing SIP " + args.package  + "...")
+    print ("Safely removing SIP " + args.package + "...")
     SIP.safeRemove()
     sipParent = os.path.join(sipDir, colID)
     if len(os.listdir(sipParent)) == 0:
         os.rmdir(sipParent)
+    print ("Removed SIP " + args.package)
+    print ("Complete!")
+else:
+    print ("Complete!")
+    print ("Remember use safeRemoveSIP.py to remove SIP " + args.package)
