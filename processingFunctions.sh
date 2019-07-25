@@ -6,11 +6,11 @@ ingest () {
     args="$*"
 
     # set pyenv
-    pyenv activate ingest
-    sudo env PATH=$PATH nohup python /opt/lib/ingest-processing-workflow/ingest.py $args >> /media/SPE/ingest/"$1"-ingest.log 2>&1 &
+    #pyenv activate ingest
+    sudo nohup python3 /opt/lib/ingest-processing-workflow/ingest.py $args >> /media/SPE/ingest/"$1"-ingest.log 2>&1 &
     
     # deactivate pyenv
-    pyenv deactivate
+    #pyenv deactivate
 }
 
 transfer () {
@@ -19,9 +19,22 @@ transfer () {
     args="$*"
 
     # set pyenv
-    pyenv activate ingest
-    sudo env PATH=$PATH nohup python /opt/lib/ingest-processing-workflow/transferAccession.py $args >> /media/SPE/ingest/"$1"-transfer.log 2>&1 &
+    #pyenv activate ingest
+    sudo nohup python3 /opt/lib/ingest-processing-workflow/transferAccession.py $args >> /media/SPE/ingest/"$1"-transfer.log 2>&1 &
     
     # deactivate pyenv
-    pyenv deactivate
+    #pyenv deactivate
+}
+
+ingestTest () {
+    # function to call ingest.py under nohup
+
+    args="$*"
+
+    # set pyenv
+    #pyenv activate ingest
+    sudo python3 /opt/lib/ingest-processing-workflow/ingest.py $args &
+    
+    # deactivate pyenv
+    #pyenv deactivate
 }

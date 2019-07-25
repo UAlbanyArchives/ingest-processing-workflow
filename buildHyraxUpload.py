@@ -34,7 +34,7 @@ hyraxSheetFile = os.path.join(metadata, args.package + ".tsv")
 if not os.path.isdir(package) or not os.path.isdir(derivatives) or not os.path.isdir(metadata):
     raise ("ERROR: " + package + " is not a valid package.")
     
-collectionData = requests.get("https://archives.albany.edu/collections/catalog/" + colID.replace(".", "-") + "?format=json", verify=False).json()
+collectionData = requests.get("https://archives.albany.edu/description/catalog/" + colID.replace(".", "-") + "?format=json", verify=False).json()
 collectingArea = collectionData["response"]["document"]["repository_ssm"][0]
 collection = collectionData["response"]["document"]["title_ssm"][0]
 processingNote = "Processing documentation available at: https://wiki.albany.edu/display/SCA/Processing+Ingested+Digital+Files"
@@ -96,7 +96,7 @@ for sheetFile in os.listdir(metadata):
                                     title = row[8].value
                                     date = row[9].value
                                     print ("\tReading " + str(title) + "...")
-                                    arclight = requests.get("https://archives.albany.edu/collections/catalog/" + colID.replace(".", "-") + "aspace_" + refID + "?format=json", verify=False)
+                                    arclight = requests.get("https://archives.albany.edu/description/catalog/" + colID.replace(".", "-") + "aspace_" + refID + "?format=json", verify=False)
                                     if arclight.status_code == 200:
                                         parentList = []
                                         itemData = arclight.json()
