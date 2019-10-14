@@ -52,7 +52,8 @@ if args.update:
 else:
     print ("Moving masters from SIP...")
     AIP.packageFiles("masters", SIP.data)
-    
+
+print ("Cleaning AIP...")    
 AIP.clean()
 print ("Writing checksums...")
 AIP.bag.save(manifests=True)
@@ -75,3 +76,4 @@ if not args.update:
 else:
     print ("Complete!")
     print ("Remember use safeRemoveSIP.py to remove SIP " + args.package)
+    
