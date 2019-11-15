@@ -1,39 +1,39 @@
 # located in /etc/profile.d
 
 ingest () {
-    # function to call ingest.py under nohup
+    # function to call ingest.py in the background
 
     args="$*"
 
     # set pyenv
     #pyenv activate ingest
-    sudo nohup python3 /opt/lib/ingest-processing-workflow/ingest.py $args >> /media/SPE/ingest/"$1"-ingest.log 2>&1 &
+    sudo -b python3 /opt/lib/ingest-processing-workflow/ingest.py $args >> /media/SPE/ingest/"$1"-ingest.log 2>&1
     
     # deactivate pyenv
     #pyenv deactivate
 }
 
 transfer () {
-    # function to call transferAccession.py under nohup
+    # function to call transferAccession.py in the background
 
     args="$*"
 
     # set pyenv
     #pyenv activate ingest
-    sudo nohup python3 /opt/lib/ingest-processing-workflow/transferAccession.py $args >> /media/SPE/ingest/"$1"-transfer.log 2>&1 &
+    sudo -b python3 /opt/lib/ingest-processing-workflow/transferAccession.py $args >> /media/SPE/ingest/"$1"-transfer.log 2>&1
     
     # deactivate pyenv
     #pyenv deactivate
 }
 
-ingestTest () {
-    # function to call ingest.py under nohup
+packageAIP () {
+    # function to call packageAIP.py in the background
 
     args="$*"
 
     # set pyenv
     #pyenv activate ingest
-    sudo python3 /opt/lib/ingest-processing-workflow/ingest.py $args &
+    sudo -b python3 /opt/lib/ingest-processing-workflow/packageAIP.py $args >> /media/SPE/processing/"$1"-packageAIP.log 2>&1
     
     # deactivate pyenv
     #pyenv deactivate

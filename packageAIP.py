@@ -1,6 +1,7 @@
 import os
 import shutil
 import argparse
+from datetime import datetime
 from packages.AIP import ArchivalInformationPackage
 from packages.SIP import SubmissionInformationPackage
 
@@ -16,6 +17,8 @@ else:
     processingDir = "/media/SPE/processing"
     sipDir = "/media/Masters/Archives/SIP"
     aipDir = "/media/Masters/Archives/AIP"
+
+print("Began at " + str(datetime.now()))
 
 colID = args.package.split("_")[0].split("-")[0]
 package = os.path.join(processingDir, colID, args.package)
@@ -33,6 +36,7 @@ SIP.load(sipPackage)
 print ("Validating SIP " + args.package + "...")
 if not SIP.bag.is_valid():
     raise ("ERROR: SIP " + args.package + " is not a valid bag!.")
+print("Finished Validating at " + str(datetime.now()))
 
 print ("Creating AIP " + args.package + "...")
 AIP = ArchivalInformationPackage()
@@ -56,14 +60,9 @@ else:
 print ("Cleaning AIP...")    
 AIP.clean()
 print ("Writing checksums...")
-AIP.bag.save(manifests=True)
+AIP.bag.save(processes=4, manifests=True)
 print ("AIP Saved!")
-
-print ("Removing processing package " + args.package  + "...")
-shutil.rmtree(package)
-collectionDir = os.path.join(processingDir, colID)
-if len(os.listdir(collectionDir)) == 0:
-    os.rmdir(collectionDir)
+print("Finished save at " + str(datetime.now()))
 
 if not args.update:
     print ("Safely removing SIP " + args.package + "...")
@@ -72,8 +71,30 @@ if not args.update:
     if len(os.listdir(sipParent)) == 0:
         os.rmdir(sipParent)
     print ("Removed SIP " + args.package)
-    print ("Complete!")
+    print("Removed SIP at " + str(datetime.now()))
+    
+    # remove processing package
+    print ("Removing processing package " + args.package  + "...")
+    shutil.rmtree(package)
+    collectionDir = os.path.join(processingDir, colID)
+    if len(os.listdir(collectionDir)) == 0:
+        os.rmdir(collectionDir)
+    print("Removed processing package at " + str(datetime.now()))
 else:
-    print ("Complete!")
+    print ("Skipping removal of SIP. Must run safeRemoveSIP.py when updating masters from processing package.")
+    
+    if AIP.bag.is_valid():
+        # remove processing package
+        print ("Removing processing package " + args.package  + "...")
+        shutil.rmtree(package)
+        collectionDir = os.path.join(processingDir, colID)
+        if len(os.listdir(collectionDir)) == 0:
+            os.rmdir(collectionDir)
+        print("Removed processing package at " + str(datetime.now())) 
+    else:
+        raise Exception("ERROR: " + str(aipPath) + " is not valid! A valid AIP must be present to use SIP.safeRemove().")
+
     print ("Remember use safeRemoveSIP.py to remove SIP " + args.package)
     
+print ("Complete!")
+print("Finished at " + str(datetime.now()))
