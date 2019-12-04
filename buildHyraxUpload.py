@@ -128,10 +128,13 @@ for sheetFile in os.listdir(metadata):
                                     
                                     hyraxSheet.append(hyraxObject)
                                 
-
-outfile = open(hyraxSheetFile, "w")
-writer = csv.writer(outfile, delimiter='\t', lineterminator='\n')
-writer.writerow(hyraxHeaders)
+if os.path.isfile(hyraxSheetFile):
+    outfile = open(hyraxSheetFile, "a")
+    writer = csv.writer(outfile, delimiter='\t', lineterminator='\n')
+else:
+    outfile = open(hyraxSheetFile, "w")
+    writer = csv.writer(outfile, delimiter='\t', lineterminator='\n')
+    writer.writerow(hyraxHeaders)
 for object in hyraxSheet:
     writer.writerow(object)
 outfile.close()
