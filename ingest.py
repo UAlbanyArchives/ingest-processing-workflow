@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import bagit
+from listFiles import listFiles
 from packages.SIP import SubmissionInformationPackage
 
 #version of ingest.py
@@ -83,6 +84,10 @@ def main(ID, path=None, accession=None):
     print ("Writing checksums...")
     SIP.bag.save(manifests=True)
     print ("SIP Saved!")
+    
+    # List files in txt for processing
+    print ("Listing files for processing...")
+    listFiles(ID)    
     
     if accession == None:
         SIP.extentLog("/media/SPE/DigitizationExtentTracker/DigitizationExtentTracker.xlsx")
