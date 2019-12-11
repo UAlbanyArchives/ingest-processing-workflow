@@ -42,3 +42,11 @@ packageAIP () {
     # deactivate pyenv
     #pyenv deactivate
 }
+
+check () {
+    # function to call ingest.py in the background
+
+    args="$*"
+    ps aux | grep [${args:0:1}]${args:1}
+    
+}
