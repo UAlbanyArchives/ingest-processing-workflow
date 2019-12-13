@@ -2,12 +2,10 @@
 
 ingest () {
     # function to call ingest.py in the background
-
-    args="$*"
     
     # set pyenv
     #pyenv activate ingest
-    sudo -b python3 /opt/lib/ingest-processing-workflow/ingest.py $args >> /media/SPE/ingest/log/$(date +"%Y%m%d%H%M")-ingest-"$1".log 2>&1
+    sudo -b python3 /opt/lib/ingest-processing-workflow/ingest.py "$@" >> /media/SPE/ingest/log/$(date +"%Y%m%d%H%M")-ingest-"$1".log 2>&1
 
     # deactivate pyenv
     #pyenv deactivate
@@ -16,11 +14,9 @@ ingest () {
 transfer () {
     # function to call transferAccession.py in the background
 
-    args="$*"
-
     # set pyenv
     #pyenv activate ingest
-    sudo -b python3 /opt/lib/ingest-processing-workflow/transferAccession.py $args >> /media/SPE/ingest/log/$(date +"%Y%m%d%H%M")-transfer-"$1".log 2>&1
+    sudo -b python3 /opt/lib/ingest-processing-workflow/transferAccession.py "$@" >> /media/SPE/ingest/log/$(date +"%Y%m%d%H%M")-transfer-"$1".log 2>&1
 
     # deactivate pyenv
     #pyenv deactivate
