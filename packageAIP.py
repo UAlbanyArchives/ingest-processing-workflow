@@ -62,24 +62,29 @@ AIP.clean()
 print ("Writing checksums...")
 AIP.bag.save(processes=4, manifests=True)
 print ("AIP Saved!")
-print("Finished save at " + str(datetime.now()))
+print ("Finished save at " + str(datetime.now()))
 
 if not args.update:
-    print ("Safely removing SIP " + args.package + "...")
-    SIP.safeRemove()
-    sipParent = os.path.join(sipDir, colID)
-    if len(os.listdir(sipParent)) == 0:
-        os.rmdir(sipParent)
-    print ("Removed SIP " + args.package)
-    print("Removed SIP at " + str(datetime.now()))
-    
-    # remove processing package
-    print ("Removing processing package " + args.package  + "...")
-    shutil.rmtree(package)
-    collectionDir = os.path.join(processingDir, colID)
-    if len(os.listdir(collectionDir)) == 0:
-        os.rmdir(collectionDir)
-    print("Removed processing package at " + str(datetime.now()))
+    print ("Checking AIP against SIP manifest...")
+    if AIP.checkSIPManifest:
+        print ("AIP masters conforms to SIP manifest :)")
+        print ("Safely removing SIP " + args.package + "...")
+        SIP.safeRemove()
+        sipParent = os.path.join(sipDir, colID)
+        if len(os.listdir(sipParent)) == 0:
+            os.rmdir(sipParent)
+        print ("Removed SIP " + args.package)
+        print ("Removed SIP at " + str(datetime.now()))
+        
+        # remove processing package
+        print ("Removing processing package " + args.package  + "...")
+        shutil.rmtree(package)
+        collectionDir = os.path.join(processingDir, colID)
+        if len(os.listdir(collectionDir)) == 0:
+            os.rmdir(collectionDir)
+        print ("Removed processing package at " + str(datetime.now()))
+    else:
+        raise ValueError ("ERROR: AIP does not conform to SIP manifest. Did not delete SIP.")
 else:
     print ("Skipping removal of SIP. Must run safeRemoveSIP.py when updating masters from processing package.")
     
@@ -97,4 +102,4 @@ else:
     print ("Remember use safeRemoveSIP.py to remove SIP " + args.package)
     
 print ("Complete!")
-print("Finished at " + str(datetime.now()))
+print ("Finished at " + str(datetime.now()))
