@@ -59,8 +59,12 @@ for sheetFile in os.listdir(metadata):
                         rowCount = rowCount + 1
                         if rowCount > 6:
                             if not row[22].value is None:
-                            
-                                filePath = os.path.join(derivatives, row[22].value)
+                                
+                                if "|" in row[22].value:
+                                    daoPath = row[22].value.split("|")[0]
+                                else:
+                                    daoPath = row[22].value
+                                filePath = os.path.join(derivatives, daoPath)
                                 if os.path.isfile(filePath):
                             
                                     refID = row[0].value
