@@ -19,6 +19,7 @@ else:
 colID = args.package.split("_")[0].split("-")[0]
 package = os.path.join(processingDir, colID, args.package)
 derivatives = os.path.join(package, "derivatives")
+masters = os.path.join(package, "masters")
 metadata = os.path.join(package, "metadata")
 
 hyraxHeaders = ["Type", "URIs", "File Paths", "Accession", "Collecting Area", "Collection Number", "Collection", "ArchivesSpace ID", \
@@ -54,7 +55,8 @@ def getParents(obj, parentList, level, objURI):
             parentRefID = client.get(child["record_uri"]).json()["ref_id"]
             parentList.append(parentRefID)
             getParents(child, parentList, level, objURI)
-    
+
+warningList = [] 
 for sheetFile in os.listdir(metadata):
     if sheetFile.lower().endswith(".xlsx") and not sheetFile.lower().startswith("~$"):
         if not args.file or args.file.lower() == sheetFile.lower():
@@ -122,7 +124,13 @@ for sheetFile in os.listdir(metadata):
                                         parentList = getParents(tree, parentList, 0, objURI)
                                         print (parentList)
                                         parents = "|".join(parentList)                                            
-                                        
+                                    
+                                    derivativesDao = os.path.join(derivatives, row[22].value)
+                                    masterDao = os.path.join(masters, row[22].value)
+                                    if not os.path.isfile(derivativesDao) and not os.path.isfile(masterDao):
+                                        print ("WARNING: DAO filename \"" + row[22].value + "\" does not exist in package.")
+                                        warningList.append(row[22].value)
+                                    
                                     hyraxObject = ["DAO", "", row[22].value, args.package, collectingArea, colID, collection, refID, parents, title, "", date, \
                                     "", "", "", "", "whole", processingNote, "", ""]
                                     
@@ -139,3 +147,7 @@ for object in hyraxSheet:
     #print (object[9])
     writer.writerow(object)
 outfile.close()
+
+if len(warningList) > 0:
+    print ("WARNING: the following files were not found in package:")
+    print ("\t" + "\n\t".join(warningList))
