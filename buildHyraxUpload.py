@@ -56,7 +56,7 @@ def getParents(obj, parentList, level, objURI):
             getParents(child, parentList, level, objURI)
     
 for sheetFile in os.listdir(metadata):
-    if sheetFile.lower().endswith(".xlsx"):
+    if sheetFile.lower().endswith(".xlsx") and not sheetFile.lower().startswith("~$"):
         if not args.file or args.file.lower() == sheetFile.lower():
             print ("Reading sheet: " + sheetFile)
             sheetPath = os.path.join(metadata, sheetFile)
