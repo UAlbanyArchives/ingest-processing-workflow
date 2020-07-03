@@ -18,6 +18,8 @@ parser.add_argument("package", help="ID for package you are processing, i.e. 'ua
 parser.add_argument("-i", "--input", help="Input format for images, such as tiff, jpg, or png.")
 parser.add_argument("-o", "--output", help="Output format, such as jpg, png, or pdf.")
 parser.add_argument("-p", "--path", help="Subpath, relative to masters directory which will only convert files there.", default=None)
+parser.add_argument("-r", "--resize", help="Optional resize argument for image conversion, sets maximum in pixels, such as '1000x1000'.", default=None)
+parser.add_argument("-d", "--density", help="Optional resolution argument for image conversion, such as '72' or '300'.", default=None)
 
 args = parser.parse_args()
 
@@ -111,7 +113,15 @@ if args.output.lower() == "pdf":
                 if inputFile.lower().endswith(format1) or inputFile.lower().endswith(format2):
                     convertFile = os.path.join(convertDir, os.path.splitext(inputFile)[0] + ".jpg")
                     print ("compressing " + inputFile + "...")
-                    cmd = [imagemagick, os.path.join(folder, inputFile), convertFile]
+                    cmd = [imagemagick, os.path.join(folder, inputFile)]
+                    if args.resize:
+                        cmd.append("-resize")
+                        cmd.append(args.resize)
+                    if args.density:
+                        cmd.append("-density")
+                        cmd.append(args.density)
+                    cmd.append(convertFile)
+                    #print (cmd)
                     process(cmd)
                     pageList.append(convertFile)
             if os.path.isfile(outputPath):
@@ -147,9 +157,12 @@ else:
                     print ("skipping, as " + str(os.path.splitext(file)[0] + "." + str(args.output)) + " already exists.")
                 else:
                     print ("converting " + file + " to " + str(args.output))
-                    cmd = [imagemagick, fullPath, outputFile]
+                    cmd = [imagemagick, os.path.join(folder, inputFile)]
+                    if args.resize:
+                        cmd.append("-resize")
+                        cmd.append(args.resize)
+                    if args.density:
+                        cmd.append("-density")
+                        cmd.append(args.density)
+                    cmd.append(convertFile)
                     process(cmd)
-        
-        
-        
-        
