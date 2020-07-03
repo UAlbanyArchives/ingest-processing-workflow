@@ -17,6 +17,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("package", help="ID for package you are processing, i.e. 'ua950.012_Xf5xzeim7n4yE6tjKKHqLM'.")
 parser.add_argument("-i", "--input", help="Input format for images, such as tiff, jpg, or png.")
 parser.add_argument("-o", "--output", help="Output format, such as jpg, png, or pdf.")
+parser.add_argument("-p", "--path", help="Subpath, relative to masters directory which will only convert files there.", default=None)
 
 args = parser.parse_args()
 
@@ -34,8 +35,8 @@ metadata = os.path.join(package, "metadata")
 dirList = [package, masters, derivatives, metadata]
 
 def process(cmd):
-    p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
-    #p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+    #p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
+    p = Popen(cmd, stdout=PIPE, stderr=PIPE)
     stdout, stderr = p.communicate()
     if len(stdout) > 0:
         print (stdout)
@@ -58,6 +59,11 @@ if args.input.lower() == "jpg" or args.input.lower()== "jpeg":
 else:
     format1 = "." + str(args.input)
     format2 = "." + str(args.input)
+    
+if args.path:
+    masters = os.path.join(masters, os.path.normpath(args.path))
+    if not os.path.isdir(masters):
+        raise Exception("ERROR: subpath " + args.path + " relative to masters is not a valid path.")
 
 if args.output.lower() == "pdf":
 
