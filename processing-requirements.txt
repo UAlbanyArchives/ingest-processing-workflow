@@ -7,7 +7,7 @@ et-xmlfile==1.0.1
 idna==2.8
 img2pdf==0.3.3
 jdcal==1.4.1
-lxml==4.3.3
+lxml==4.6.2
 ocrmypdf==8.3.0
 openpyxl==2.6.2
 pdfminer.six==20181108
