@@ -157,12 +157,12 @@ else:
                     print ("skipping, as " + str(os.path.splitext(file)[0] + "." + str(args.output)) + " already exists.")
                 else:
                     print ("converting " + file + " to " + str(args.output))
-                    cmd = [imagemagick, os.path.join(folder, inputFile)]
+                    cmd = [imagemagick, os.path.join(root, file)]
                     if args.resize:
                         cmd.append("-resize")
                         cmd.append(args.resize)
                     if args.density:
                         cmd.append("-density")
                         cmd.append(args.density)
-                    cmd.append(convertFile)
+                    cmd.append(outputFile)
                     process(cmd)

@@ -1,5 +1,7 @@
 import os
-import email
+from email import policy
+from email.parser import BytesParser
+from email.iterators import _structure
 import argparse
 from subprocess import Popen, PIPE
 
@@ -22,16 +24,39 @@ if not os.path.isdir(package) or not os.path.isdir(derivatives):
 senders = []
 recievers = []
 
+outfile = os.path.join(derivatives, "test.html")
+
+count = 0
 for root, dirs, files in os.walk(derivatives):
     for file in files:
         if file.lower().endswith("eml"):
+            count += 1
             filePath = os.path.join(root, file)
             
-            file = open(filePath, "r")
-            raw_email = file.read()
-            msg = email.message_from_string(raw_email)
-            if msg["from"] not in senders:
-                senders.append(msg["from"])
-            if msg["from"] not in recievers:
-                recievers.append(msg["from"])
-            file.close()
+            if count == 30:
+                with open(filePath, 'rb') as fp:
+                    msg = BytesParser(policy=policy.default).parse(fp)
+                #text = msg.get_body(preferencelist=('plain')).get_content()
+                #print(text)
+                for part in msg.walk():
+                    print(part.get_content_type())
+                    if part.get_content_type() == "text/html":
+                        #print (part)
+                        file = open(outfile, "w")
+                        file.write(str(part))
+                        file.close()
+                print ("thats the type list")
+                #_structure(msg)
+                print (msg['To'])
+                print (msg['From'])
+                print (msg['Subject'])
+                """
+                file = open(filePath, "rb")
+                raw_email = file.read()
+                msg = email.message_from_string(raw_email)
+                if msg["from"] not in senders:
+                    senders.append(msg["from"])
+                if msg["from"] not in recievers:
+                    recievers.append(msg["from"])
+                file.close()
+                """

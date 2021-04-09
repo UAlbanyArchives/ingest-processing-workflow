@@ -16,6 +16,7 @@ else:
 colID = args.package.split("_")[0].split("-")[0]
 package = os.path.join(processingDir, colID, args.package)
 derivatives = os.path.join(package, "derivatives")
+masters = os.path.join(package, "masters")
 metadata = os.path.join(package, "metadata")
 
 if not os.path.isdir(package) or not os.path.isdir(derivatives) or not os.path.isdir(metadata):
@@ -64,7 +65,12 @@ for sheetFile in os.listdir(metadata):
                                     daoPath = row[22].value.split("|")[0]
                                 else:
                                     daoPath = row[22].value
-                                filePath = os.path.join(derivatives, daoPath)
+                                filePathDerivatives = os.path.join(derivatives, daoPath)
+                                filePathMasters = os.path.join(masters, daoPath)
+                                if os.path.isfile(filePathDerivatives):
+                                    filePath = filePathDerivatives
+                                else:
+                                    filePath = filePathMasters
                                 if os.path.isfile(filePath):
                             
                                     refID = row[0].value
