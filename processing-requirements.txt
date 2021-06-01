@@ -21,4 +21,4 @@ ruffus==2.8.1
 shortuuid==0.5.0
 six==1.12.0
 sortedcontainers==2.1.0
-urllib3==1.25.3
+urllib3==1.26.5
