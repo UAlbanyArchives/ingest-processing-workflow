@@ -20,6 +20,7 @@ parser.add_argument("-o", "--output", help="Output format, such as jpg, png, or 
 parser.add_argument("-p", "--path", help="Subpath, relative to masters directory which will only convert files there.", default=None)
 parser.add_argument("-r", "--resize", help="Optional resize argument for image conversion, sets maximum in pixels, such as '1000x1000'.", default=None)
 parser.add_argument("-d", "--density", help="Optional resolution argument for image conversion, such as '72' or '300'.", default=None)
+parser.add_argument("-bw", "--monochrome", help="Convert to a monochome image (only black and white)", action="store_true")
 
 args = parser.parse_args()
 
@@ -164,5 +165,7 @@ else:
                     if args.density:
                         cmd.append("-density")
                         cmd.append(args.density)
+                    if args.monochrome:
+                        cmd.append("-monochrome") 
                     cmd.append(outputFile)
                     process(cmd)
