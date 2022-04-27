@@ -79,7 +79,7 @@ for sheetFile in os.listdir(metadata):
                                     file = open(hyraxImport, "r")
                                     reader = csv.reader(file, delimiter='\t')
                                     for line in reader:
-                                        if line[1].startswith("daos/"):
+                                        if line[1].startswith("daos/") or line[1].startswith("avs/") or line[1].startswith("images/"):
                                             if line[7] == refID:
                                                 print ("Updating " + str(row[22].value) + " to " + str(line[1]))
                                                 row[22].value = "https://archives.albany.edu/concern/" + line[1]
