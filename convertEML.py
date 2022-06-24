@@ -7,9 +7,9 @@ argParse.add_argument("package", help="Package ID in Processing directory.")
 args = argParse.parse_args()
 
 if os.name == 'nt':
-    processingDir = "\\\\Romeo\\SPE\\processing"
+    processingDir = "\\\\Lincoln\\Library\\SPE_Processing\\backlog"
 else:
-    processingDir = "/media/SPE/processing"
+    processingDir = "/media/Library/SPE_Processing/backlog"
 
 def process(cmd):
     p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
