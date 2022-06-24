@@ -36,8 +36,8 @@ if not os.path.isdir(package) or not os.path.isdir(derivatives) or not os.path.i
     raise ("ERROR: " + package + " is not a valid package.")
     
 collectionData = requests.get("https://archives.albany.edu/description/catalog/" + colID.replace(".", "-") + "?format=json", verify=False).json()
-collectingArea = collectionData["response"]["document"]["repository_ssm"][0]
-collection = collectionData["response"]["document"]["title_ssm"][0]
+collectingArea = collectionData["data"]["attributes"]["repository_ssm"]["attributes"]["value"][0]
+collection = collectionData["data"]["attributes"]["title_ssm"]["attributes"]["value"][0]
 processingNote = "Processing documentation available at: https://wiki.albany.edu/display/SCA/Processing+Ingested+Digital+Files"
 
 # make hyrax sheet
@@ -102,7 +102,7 @@ for sheetFile in os.listdir(metadata):
                                     if arclight.status_code == 200:
                                         parentList = []
                                         itemData = arclight.json()
-                                        for parent in itemData["response"]["document"]["parent_ssm"][1:]:
+                                        for parent in itemData["data"]["attributes"]["parent_ssim"]["attributes"]["value"][1:]:
                                             parentList.append(parent.split("_")[1])
                                         parents = "|".join(parentList)
                                     else:
