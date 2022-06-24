@@ -3,9 +3,9 @@ import os
 def listFiles(ID, directories, verbose=False):
 
     if os.name == 'nt':
-        processingDir = "\\\\Romeo\\SPE\\processing"
+        processingDir = "\\\\Lincoln\\Library\\SPE_Processing\\backlog"
     else:
-        processingDir = "/media/SPE/processing"
+        processingDir = "/media/Library/SPE_Processing/backlog"
 
     colID = ID.split("_")[0].split("-")[0]
     package = os.path.join(processingDir, colID, ID)

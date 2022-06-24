@@ -10,10 +10,10 @@ argParse.add_argument("-f", "--file", help="File name of spreadsheet to be updat
 args = argParse.parse_args()
 
 if os.name == 'nt':
-    processingDir = "\\\\Romeo\\SPE\\processing"
+    processingDir = "\\\\Lincoln\\Library\\SPE_Processing\\backlog"
     #ESPYderivatives = "\\\\Lincoln\Library\ESPYderivatives"
 else:
-    processingDir = "/media/SPE/processing"
+    processingDir = "/media/Library/SPE_Processing/backlog"
     #ESPYderivatives = "/media/Library/ESPYderivatives"
 
 colID = args.package.split("_")[0].split("-")[0]

@@ -5,11 +5,11 @@ import argparse
 from subprocess import Popen, PIPE
 
 if os.name == 'nt':
-    processingDir = "\\\\Romeo\\SPE\\processing"
+    processingDir = "\\\\Lincoln\\Library\\SPE_Processing\\backlog"
     imagemagick = "magick"
     pdfCmd = ["pdftk", "cat output "]
 else:
-    processingDir = "/media/SPE/processing"
+    processingDir = "/media/Library/SPE_Processing/backlog"
     imagemagick = "convert"
     pdfCmd = ["pdfunite", ""]
     

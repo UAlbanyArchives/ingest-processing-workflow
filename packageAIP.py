@@ -14,7 +14,7 @@ args = argParse.parse_args()
 if os.name == 'nt':
     raise ("ERROR: Must be run from processing server.")
 else:
-    processingDir = "/media/SPE/processing"
+    processingDir = "/media/Library/SPE_Processing/backlog"
     sipDir = "/media/Masters/Archives/SIP"
     aipDir = "/media/Masters/Archives/AIP"
 
