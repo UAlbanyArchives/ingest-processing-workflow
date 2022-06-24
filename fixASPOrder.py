@@ -6,9 +6,9 @@ argParse.add_argument("package", help="Package ID in Processing directory.")
 args = argParse.parse_args()
 
 if os.name == 'nt':
-    processingDir = "\\\\Romeo\\SPE\\processing"
+    processingDir = "\\\\Lincoln\\Library\\SPE_Processing\\backlog"
 else:
-    processingDir = "/media/SPE/processing"
+    processingDir = "/media/Library/SPE_Processing/backlog"
 
 colID = args.package.split("_")[0].split("-")[0]
 package = os.path.join(processingDir, colID, args.package)

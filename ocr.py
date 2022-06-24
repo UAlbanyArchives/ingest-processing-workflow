@@ -4,9 +4,9 @@ from tqdm import tqdm
 from subprocess import Popen, PIPE
 
 if os.name == 'nt':
-    processingDir = "\\\\Romeo\\SPE\\processing"
+    processingDir = "\\\\Lincoln\\Library\\SPE_Processing\\backlog"
 else:
-    processingDir = "/media/SPE/processing"
+    processingDir = "/media/Library/SPE_Processing/backlog"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("package", help="ID for package you are processing, i.e. 'ua950.012_Xf5xzeim7n4yE6tjKKHqLM'.")

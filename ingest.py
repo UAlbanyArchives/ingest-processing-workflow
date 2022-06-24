@@ -7,7 +7,7 @@ from packages.SIP import SubmissionInformationPackage
 
 #version of ingest.py
 version = "0.1"
-defaultPath = "/media/SPE/ingest"
+defaultPath = "/media/Library/SPE_Processing/ingest"
 
 
 def main(ID, path=None, accession=None):
@@ -90,7 +90,7 @@ def main(ID, path=None, accession=None):
     #listFiles(ID)    
     
     if accession == None:
-        SIP.extentLog("/media/SPE/DigitizationExtentTracker/DigitizationExtentTracker.xlsx")
+        SIP.extentLog("/media/Library/SPE_Automated/DigitizationExtentTracker/DigitizationExtentTracker.xlsx")
         print ("Logged ingest to DigitizationExtentTracker.")
     else:
         print ("Updating accession " + accessionID)

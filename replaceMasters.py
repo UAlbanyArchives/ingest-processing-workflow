@@ -8,10 +8,10 @@ argParse.add_argument("package", help="Package ID in Processing directory.")
 args = argParse.parse_args()
 
 if os.name == 'nt':
-    processingDir = "\\\\Romeo\\SPE\\processing"
+    processingDir = "\\\\Lincoln\\Library\\SPE_Processing\\backlog"
     sipDir = "\\\\Lincoln\\Masters\\Archives\\SIP"
 else:
-    processingDir = "/media/SPE/processing"
+    processingDir = "/media/Library/SPE_Processing/backlog"
     sipDir = "/media/Masters/Archives/SIP"
 
 colID = args.package.split("_")[0].split("-")[0]
